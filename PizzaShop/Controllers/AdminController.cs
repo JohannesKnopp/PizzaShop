@@ -34,6 +34,7 @@ namespace PizzaShop.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    customer.PasswordHash = Cryptography.Hash(customer.Password);
                     db.Customer.Add(customer);
                     db.SaveChanges();
                     return RedirectToAction("CustomersList");

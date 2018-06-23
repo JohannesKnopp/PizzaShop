@@ -22,9 +22,11 @@ namespace PizzaShop.Models
     
         public int ID { get; set; }
         public int CustomerID { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
+        public System.DateTime OrderDate { get; set; }
     
         public virtual Customer Customer { get; set; }
+        public virtual Status Status1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderHasProduct> OrderHasProduct { get; set; }
     }

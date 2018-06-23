@@ -1,0 +1,47 @@
+﻿@model PizzaShop.Models.OrderHasProduct;
+@using PizzaShop.Models;
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table cellpadding="2" cellspacing="2" border="1">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Toppings</th>
+        <th>Amount</th>
+        <th>Buy</th>
+    </tr>
+
+
+@foreach (Product p in ViewBag.products)
+{
+    <tr>
+        <td>@p.Name</td>
+        <td>@p.Price €</td>
+        <td>
+    @if (p.CategoryID == 1)
+    {
+            <fieldset>
+        @foreach (Product t in ViewBag.toppings)
+        {
+            <input type="checkbox" id="@t.ID" value="@t.Name" />
+            <label for="@t.Name">@t.Name</label>
+        }
+            </fieldset>
+    }
+        </td>
+        <td>
+            Quantity
+            <input type="number" id="amount" min="1" max="10" value="1"/>
+        </td>
+        <td align="center">
+            
+            <a href="@Url.Action("AddProduct", "Cart", new { id = p.ID, amount = 1 } )">Add to Cart</a>
+        </td>
+    </tr>
+}
+
+</table>

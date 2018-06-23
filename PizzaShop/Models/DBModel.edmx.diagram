@@ -4,16 +4,18 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="676f0c1326224be08b320cd90e815ed8" Name="Diagram1">
+      <Diagram DiagramId="3371ddfcbbed43c5ab498890a4de2a50" Name="Diagram1">
         <EntityTypeShape EntityType="PizzaShopModel.Administrator" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PizzaShopModel.Allergen" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="PizzaShopModel.Category" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="PizzaShopModel.Customer" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="PizzaShopModel.Order" Width="1.5" PointX="3" PointY="8.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="PizzaShopModel.OrderHasProduct" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PizzaShopModel.Allergen" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PizzaShopModel.Category" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PizzaShopModel.Customer" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PizzaShopModel.Order" Width="1.5" PointX="3" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="PizzaShopModel.OrderHasProduct" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="PizzaShopModel.Product" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="PizzaShopModel.Status" Width="1.5" PointX="0.75" PointY="12.375" IsExpanded="true" />
         <AssociationConnector Association="PizzaShopModel.FK_Product_Category" ManuallyRouted="false" />
         <AssociationConnector Association="PizzaShopModel.FK_Order_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="PizzaShopModel.FK_Order_Status" ManuallyRouted="false" />
         <AssociationConnector Association="PizzaShopModel.FK_OrderHasProduct_Order" ManuallyRouted="false" />
         <AssociationConnector Association="PizzaShopModel.FK_OrderHasProduct_Product" ManuallyRouted="false" />
         <AssociationConnector Association="PizzaShopModel.ProductHasAllergen" ManuallyRouted="false" />

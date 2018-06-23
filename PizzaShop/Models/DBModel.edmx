@@ -10,8 +10,8 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="PasswordHash" Type="char" MaxLength="64" Nullable="false" />
         </EntityType>
         <EntityType Name="Allergen">
           <Key>
@@ -42,8 +42,8 @@
           <Property Name="Zipcode" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="254" />
-          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="PasswordHash" Type="char" MaxLength="64" Nullable="false" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -51,7 +51,8 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CustomerID" Type="int" Nullable="false" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="OrderDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderHasProduct">
           <Key>
@@ -70,6 +71,7 @@
           <Property Name="CategoryID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="IsInSortiment" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ProductHasAllergen">
           <Key>
@@ -78,6 +80,13 @@
           </Key>
           <Property Name="ProductID" Type="int" Nullable="false" />
           <Property Name="AllergenID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Order_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
@@ -88,6 +97,18 @@
             </Principal>
             <Dependent Role="Order">
               <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -160,8 +181,13 @@
           <EntitySet Name="OrderHasProduct" EntityType="Self.OrderHasProduct" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductHasAllergen" EntityType="Self.ProductHasAllergen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Order_Customer" Association="Self.FK_Order_Customer">
             <End Role="Customer" EntitySet="Customer" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Status" Association="Self.FK_Order_Status">
+            <End Role="Status" EntitySet="Status" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderHasProduct_Order" Association="Self.FK_OrderHasProduct_Order">
@@ -195,8 +221,8 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="64" FixedLength="true" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="Allergen">
           <Key>
@@ -229,8 +255,8 @@
           <Property Name="Zipcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="64" FixedLength="true" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Order" Relationship="Self.FK_Order_Customer" FromRole="Customer" ToRole="Order" />
         </EntityType>
         <EntityType Name="Order">
@@ -239,8 +265,10 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CustomerID" Type="Int32" Nullable="false" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Customer" Relationship="Self.FK_Order_Customer" FromRole="Order" ToRole="Customer" />
+          <NavigationProperty Name="Status1" Relationship="Self.FK_Order_Status" FromRole="Order" ToRole="Status" />
           <NavigationProperty Name="OrderHasProduct" Relationship="Self.FK_OrderHasProduct_Order" FromRole="Order" ToRole="OrderHasProduct" />
         </EntityType>
         <EntityType Name="OrderHasProduct">
@@ -262,9 +290,18 @@
           <Property Name="CategoryID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="6" Scale="2" Nullable="false" />
+          <Property Name="IsInSortiment" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Product_Category" FromRole="Product" ToRole="Category" />
           <NavigationProperty Name="OrderHasProduct" Relationship="Self.FK_OrderHasProduct_Product" FromRole="Product" ToRole="OrderHasProduct" />
           <NavigationProperty Name="Allergen" Relationship="Self.ProductHasAllergen" FromRole="Product" ToRole="Allergen" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Order_Status" FromRole="Status" ToRole="Order" />
         </EntityType>
         <Association Name="FK_Product_Category">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
@@ -287,6 +324,18 @@
             </Principal>
             <Dependent Role="Order">
               <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Order_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Status" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -326,12 +375,17 @@
           <EntitySet Name="Order" EntityType="Self.Order" />
           <EntitySet Name="OrderHasProduct" EntityType="Self.OrderHasProduct" />
           <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
           <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
             <End Role="Category" EntitySet="Category" />
             <End Role="Product" EntitySet="Product" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_Customer" Association="Self.FK_Order_Customer">
             <End Role="Customer" EntitySet="Customer" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_Status" Association="Self.FK_Order_Status">
+            <End Role="Status" EntitySet="Status" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderHasProduct_Order" Association="Self.FK_OrderHasProduct_Order">
@@ -357,7 +411,7 @@
             <EntityTypeMapping TypeName="PizzaShopModel.Administrator">
               <MappingFragment StoreEntitySet="Administrator">
                 <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -403,6 +457,7 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -422,6 +477,15 @@
                 <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="IsInSortiment" ColumnName="IsInSortiment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="PizzaShopModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

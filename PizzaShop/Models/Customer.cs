@@ -20,10 +20,10 @@ namespace PizzaShop.Models
         {
             this.Order = new HashSet<Order>();
         }
-    
+
         public int ID { get; set; }
 
-        [Display(Name="First Name")]
+        [Display(Name = "First Name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "First name required")]
         public string Firstname { get; set; }
 
@@ -53,26 +53,28 @@ namespace PizzaShop.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Phone number required")]
         public string PhoneNumber { get; set; }
 
-        [Display(Name ="E-Mail")]
+        [Display(Name = "E-Mail")]
         [DataType(DataType.EmailAddress)]
         public string EmailAddress { get; set; }
 
         [Display(Name = "Username")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Username required")]
-        [StringLengthAttribute(32,ErrorMessage ="Username must be between 3 and 32 characters long",MinimumLength =3)]
+        [StringLengthAttribute(32, ErrorMessage = "Username must be between 3 and 32 characters long", MinimumLength = 3)]
         public string Username { get; set; }
 
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
         [StringLengthAttribute(40, ErrorMessage = "Password must be between 8 and 40 characters long", MinimumLength = 8)]
+        public string Password { get; set; }
+
         public string PasswordHash { get; set; }
 
         [Display(Name = "Confirm Password")]
         [DataType(DataType.Password)]
         [StringLengthAttribute(40, ErrorMessage = "Password must be between 8 and 40 characters long", MinimumLength = 8)]
-        [Compare("PasswordHash",ErrorMessage ="Password and confirm password do not match")]
+        [Compare("Password", ErrorMessage = "Password and confirm password do not match")]
         public string ConfirmPassword { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Order { get; set; }
     }

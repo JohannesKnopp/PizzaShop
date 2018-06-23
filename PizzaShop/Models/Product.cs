@@ -25,6 +25,7 @@ namespace PizzaShop.Models
         public int CategoryID { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
+        public bool IsInSortiment { get; set; }
     
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
