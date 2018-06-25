@@ -15,53 +15,60 @@ namespace PizzaShop.Controllers
         // GET: Product
         public ActionResult Index()
         {
+            /*
             Product product = new Product();
             ViewBag.products = db.Product.Where(p => p.IsInSortiment && p.CategoryID != 4).ToList();
             ViewBag.toppings = db.Product.Where(p => p.IsInSortiment && p.CategoryID == 4).ToList();
-            return View();
+            */
+            var products = (from p in db.Product
+                            where p.IsInSortiment
+                            select new
+                            {
+                                ID = p.ID,
+                                CategoryID = p.CategoryID,
+                                Name = p.Name,
+                                Price = p.Price
+                            }).ToList()
+                            .Select(x => new ProductViewModel()
+                            {
+                                ID = x.ID,
+                                CategoryID = x.CategoryID,
+                                Name = x.Name,
+                                Price = x.Price
+                            });
+
+            return View(products);
         }
 
-        /*
-        [NonAction]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddProduct(int id, int amount)
         {
-            OrderHasProduct orderHasProduct = new OrderHasProduct();
-            if (Session["cart"] == null)
+            if (ModelState.IsValid)
             {
-                List<OrderHasProduct> cart = new List<OrderHasProduct>();
-                cart.Add(new OrderHasProduct { ProductID = id, amount = amount });
-                Session["cart"] = cart;
-            }
-            else
-            {
-                List<OrderHasProduct> cart = (List<OrderHasProduct>)Session["cart"];
-                int index = cart.FindIndex(i => i.ProductID == id);
-                if (isInCart(id))
+                if (Session["cart"] == null)
                 {
-                    cart[index].amount += amount;
+                    List<ProductViewModel> cart = new List<ProductViewModel>();
+                    cart.Add(new ProductViewModel { ID = id, Amount = amount });
+                    Session["cart"] = cart;
                 }
                 else
                 {
-                    cart.Add(new OrderHasProduct { ProductID = id, amount = amount });
+                    List<ProductViewModel> cart = (List<ProductViewModel>)Session["cart"];
+                    if (cart.Where(x => x.ID == id).Count() < 1)
+                    {
+                        cart.Add(new ProductViewModel { ID = id, Amount = amount });
+                    }
+                    else
+                    {
+                        cart.Where(x => x.ID == id).ToList().ForEach(s => s.Amount += amount);
+                    }
+                    Session["cart"] = cart;
                 }
+                return View("Index", "Cart");
             }
-            return RedirectToAction("Index");
+            return View("Index");
         }
 
-        [NonAction]
-        public ActionResult RemoveProduct(int id)
-        {
-            List<OrderHasProduct> cart = (List<OrderHasProduct>)Session["cart"];
-            cart.RemoveAt(cart.FindIndex(i => i.ProductID == id));
-            Session["cart"] = cart;
-            return RedirectToAction("Index");
-        }
-
-        private bool isInCart(int id)
-        {
-            List<OrderHasProduct> cart = (List<OrderHasProduct>)Session["cart"];
-            return cart.Exists(x => x.ProductID == id);
-        }
-        */
     }
 }

@@ -1,51 +1,37 @@
-﻿@using PizzaShop.Models
+﻿@model IEnumerable<PizzaShop.Models.ProductViewModel>
+
 @{
     ViewBag.Title = "Index";
 }
 
-<!DOCTYPE html>
+<h2>Index</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-</head>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th></th>
+    </tr>
 
-<body>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price) €
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+    </tr>
+}
 
-    <h3>Cart Page</h3>
-    <table cellpadding="2" cellspacing="2" border="1">
-        <tr>
-            <th>Option</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Sub Total</th>
-        </tr>
-        @foreach (OrderHasProduct item in (List<OrderHasProduct>)Session["cart"])
-        {
-            <tr>
-                <td><a href="@Url.Action("RemoveProduct", "Cart", new { id = item.ProductID })">Remove</a></td>
-                <td>@item.ProductID</td>
-                <td>@item.Product.Name</td>
-                <td>@item.Product.Price</td>
-                <td>@item.amount</td>
-                <td>@(item.Product.Price * item.amount)</td>
-            </tr>
-        }
-        <tr>
-            <td align="right" colspan="6">Sum</td>
-            <td>
-                @{
-                    List<OrderHasProduct> cart = (List<OrderHasProduct>)Session["cart"];
-                    var total = cart.Sum(item => item.Product.Price * item.amount);
-                }
-                @total
-            </td>
-        </tr>
-    </table>
-    <br>
-    <a href="@Html.ActionLink("Index", "Product")">Continue Shopping</a>
-
-</body>
-</html>
+</table>

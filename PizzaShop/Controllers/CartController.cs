@@ -12,10 +12,12 @@ namespace PizzaShop.Controllers
         // GET: Cart
         public ActionResult Index()
         {
-            return View();
+            List<ProductViewModel> cart = (List < ProductViewModel > )Session["cart"];
+            return View(cart);
         }
 
-        public ActionResult AddProduct(int id, int amount)
+        /*
+        public EmptyResult AddProduct(int id, int amount)
         {
             OrderHasProduct orderHasProduct = new OrderHasProduct();
             if(Session["cart"] == null)
@@ -37,7 +39,39 @@ namespace PizzaShop.Controllers
                     cart.Add(new OrderHasProduct { ProductID = id, amount = amount });
                 }
             }
-            return RedirectToAction("Index");
+            return null;
+        }
+
+    */
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddProduct(int id, int amount)
+        {
+            if (ModelState.IsValid)
+            {
+                if (Session["cart"] == null)
+                {
+                    List<ProductViewModel> cart = new List<ProductViewModel>();
+                    cart.Add(new ProductViewModel { ID = id, Amount = amount });
+                    Session["cart"] = cart;
+                }
+                else
+                {
+                    List<ProductViewModel> cart = (List<ProductViewModel>)Session["cart"];
+                    if (cart.Where(x => x.ID == id).Count() < 1)
+                    {
+                        cart.Add(new ProductViewModel { ID = id, Amount = amount });
+                    }
+                    else
+                    {
+                        cart.Where(x => x.ID == id).ToList().ForEach(s => s.Amount += amount);
+                    }
+                    Session["cart"] = cart;
+                }
+                return View("Index");
+            }
+            return RedirectToAction("Index", "Product");
         }
 
         public ActionResult RemoveProduct(int id)

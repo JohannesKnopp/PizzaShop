@@ -219,6 +219,7 @@
     <Compile Include="Models\Product.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductViewModel.cs" />
     <Compile Include="Models\Status.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -557,8 +558,10 @@
     <Content Include="semantic\less\collections\grid.less" />
     <Content Include="semantic\less\collections\form.less" />
     <Content Include="semantic\less\collections\breadcrumb.less" />
-    <Content Include="Views\Cart\Index.cshtml" />
+    <Content Include="Views\Cart\Index_old.cshtml" />
+    <Content Include="Views\Product\Index_old.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Cart\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

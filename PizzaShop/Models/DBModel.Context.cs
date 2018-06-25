@@ -33,5 +33,7 @@ namespace PizzaShop.Models
         public virtual DbSet<OrderHasProduct> OrderHasProduct { get; set; }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<Status> Status { get; set; }
+
+        public System.Data.Entity.DbSet<PizzaShop.Models.ProductViewModel> ProductViewModels { get; set; }
     }
 }

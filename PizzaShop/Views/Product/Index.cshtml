@@ -1,47 +1,49 @@
-﻿@model PizzaShop.Models.OrderHasProduct;
+﻿@model IEnumerable<PizzaShop.Models.ProductViewModel>
 @using PizzaShop.Models;
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
-
-<table cellpadding="2" cellspacing="2" border="1">
+<table class="table">
     <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Toppings</th>
-        <th>Amount</th>
-        <th>Buy</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th></th>
     </tr>
 
-
-@foreach (Product p in ViewBag.products)
-{
-    <tr>
-        <td>@p.Name</td>
-        <td>@p.Price €</td>
-        <td>
-    @if (p.CategoryID == 1)
+    @foreach (var item in Model)
     {
-            <fieldset>
-        @foreach (Product t in ViewBag.toppings)
+        if (item.CategoryID != 4)
         {
-            <input type="checkbox" id="@t.ID" value="@t.Name" />
-            <label for="@t.Name">@t.Name</label>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price) €
+            </td>
+            <td>
+                @Html.EditorFor(modelItem => item.Amount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(modelItem => item.Amount, "", new { @class = "text-danger" })
+            </td>
+            <td>
+                @using (Html.BeginForm("AddProduct", "Cart", new { id = item.ID, amount = item.Amount }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" id="btnAddToCart@(item.ID)" value="Zum Warenkorb hinzufügen"/>
+                }
+            </td>
+        </tr>
         }
-            </fieldset>
     }
-        </td>
-        <td>
-            Quantity
-            <input type="number" id="amount" min="1" max="10" value="1"/>
-        </td>
-        <td align="center">
-            
-            <a href="@Url.Action("AddProduct", "Cart", new { id = p.ID, amount = 1 } )">Add to Cart</a>
-        </td>
-    </tr>
-}
 
 </table>
